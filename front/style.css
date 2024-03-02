@@ -1,0 +1,252 @@
+ body {
+   font-family: Arial, sans-serif;
+   text-align: center;
+   margin: 0;
+   /* Bodyのマージンをゼロに設定 */
+   padding: 0;
+   /* Bodyのパディングをゼロに設定 */
+
+ }
+
+ /*header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background: #fff;
+      position: relative;
+    }
+    #map {
+      height: 300px;
+    }*/
+ #map-container {
+   margin: 20px auto;
+   max-width: 800px;
+ }
+
+ #title {
+   font-size: 54px;
+   font-weight: bold;
+ }
+
+ #description {
+   font-size: 16px;
+ }
+
+
+ /* CSSコード */
+
+ #map {
+   height: 95%;
+   width: 120%;
+   position: absolute;
+   /* 地図を絶対位置に設定 */
+   top: 55%;
+   /* 上端をページの中央に */
+   left: 50%;
+   /* 左端をページの中央に */
+   transform: translate(-50%, -50%);
+   /* ページ中央に配置するトランスフォーム */
+   z-index: -1;
+   /* 地図を背面に配置 */
+ }
+
+ /*.header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 20px;
+      background: #fff;
+      position: relative;
+    }*/
+
+
+ .nav_list a {
+   font-size: 28px;
+   /* リンクの文字の大きさを指定 */
+   text-decoration: none;
+   /* 下線を非表示にする（任意） */
+   color: #333;
+   /* リンクのテキストカラーを指定 */
+ }
+
+ .logo {
+   font-size: 30px;
+   margin-right: 50px;
+ }
+
+ /* ここから下がハンバーガーメニューに関するCSS */
+
+ /* チェックボックスを非表示にする */
+ .drawer_hidden {
+   display: none;
+ }
+
+ /* ハンバーガーアイコンの設置スペース */
+ .drawer_open {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   position: absolute;
+   right: 20px;
+   z-index: 100;
+   /* 重なり順を一番上にする */
+   cursor: pointer;
+ }
+
+ /* ハンバーガーメニューのアイコン */
+ .drawer_open span,
+ .drawer_open span:before,
+ .drawer_open span:after {
+   content: "";
+   display: block;
+   height: 20px;
+   width: 80px;
+   border-radius: 3px;
+   background: #888;
+   transition: 0.5s;
+   position: absolute;
+ }
+
+ /* 三本線の一番上の棒の位置調整 */
+ .drawer_open span:before {
+   bottom: 30px;
+ }
+
+ /* 三本線の一番下の棒の位置調整 */
+ .drawer_open span:after {
+   top: 30px;
+ }
+
+ /* アイコンがクリックされたら真ん中の線を透明にする */
+ #drawer_input:checked~.drawer_open span {
+   background: rgba(255, 255, 255, 0);
+ }
+
+ /* アイコンがクリックされたらアイコンが×印になように上下の線を回転 */
+ #drawer_input:checked~.drawer_open span::before {
+   bottom: 0;
+   transform: rotate(45deg);
+ }
+
+ #drawer_input:checked~.drawer_open span::after {
+   top: 0;
+   transform: rotate(-45deg);
+ }
+
+ /* メニューのデザイン*/
+ .nav_content {
+   width: 100%;
+   height: 100%;
+   position: fixed;
+   top: 0%;
+   left: 120vw;
+   /* メニューを画面の外に飛ばす */
+   z-index: 0;
+   background: rgb(110, 110, 110);
+   transition: 0.5s;
+   text-align: center;
+   padding-top: 20px;
+   box-sizing: border-box;
+ }
+
+ /* メニュー黒ポチを消す */
+ .nav_list {
+   list-style: none;
+ }
+
+ .nav_item a {
+   color: #fff;
+   text-decoration: none;
+ }
+
+ /* アイコンがクリックされたらメニューを表示 */
+ #drawer_input:checked~.nav_content {
+   left: 0;
+ }
+
+ .custom-marker {
+   position: relative;
+ }
+
+ .custom-marker .icon {
+   display: inline-block;
+   position: relative;
+ }
+
+ .custom-marker .label {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   font-size: 12px;
+   font-weight: bold;
+   color: #333;
+ }
+
+ /* ロゴの下に追加する画像のスタイル */
+ .additional-image {
+   width: 20px;
+   /* 画像の幅を指定 */
+   height: auto;
+   /* 高さは自動調整（アスペクト比を保持） */
+ }
+
+ /* 追加のテキストと画像を横に配置するスタイル */
+ .additional-content {
+   display: flex;
+   align-items: center;
+   /* 垂直方向の中央揃え */
+ }
+
+ /* 画像の余白を調整するスタイル */
+ .additional-image {
+   margin-right: 10px;
+   /* 適切な余白を設定 */
+ }
+
+ /* ポップアップ内の文字のスタイル */
+ .leaflet-popup-content {
+   font-size: 15px;
+   /* フォントサイズを変更 */
+   line-height: 1.0;
+   /* 行の高さを調整 */
+ }
+
+ /* ポップアップの最大幅と最大高さ */
+ .leaflet-popup-content-wrapper {
+   max-width: 400px;
+   /* ポップアップの最大幅 */
+   max-height: 300px;
+   /* ポップアップの最大高さ */
+ }
+
+ /* ポップアップの閉じるボタンのスタイル */
+ .leaflet-popup-tip-container {
+   display: none;
+   /* 閉じるボタンを非表示にする */
+ }
+
+ #weather-container {
+   font-size: 15px;
+   background-color: #fff;
+   /* 任意の背景色を指定 */
+   position: absolute;
+   bottom: 10px;
+   right: 10px;
+   border: 2px solid black;
+   /* 枠のスタイルと色を指定 */
+   padding: 10px;
+   /* 適切なパディングを指定 */
+   z-index: 1;
+   height: 150px;
+   width: 200px;
+   color: black;
+   /* 任意の文字色を指定 */
+   line-height: 1;
+   /* 行間を調整 */
+ }
+
+ #weather-image {
+   width: 50px;
+ }

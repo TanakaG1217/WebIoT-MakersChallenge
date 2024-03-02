@@ -1,0 +1,190 @@
+<!-- HTMLコード -->
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <!--　地図部分　-->
+  <title>松山市の地図</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" /> <!-- style.cssを追加 -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script type="module" src="script.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<!-- HTMLコード -->
+
+<body bgcolor="#10100E" text="#cccccc">
+  <header>
+    <header class="header">
+      <!-- ヘッダーロゴ -->
+      <div class="logo">ワンダーランド松山</div>
+
+      <div id="weather-container">
+        <!-- 取得した天気データに応じて画像を表示 -->
+        <p id="weather-text"></p>
+        <img id="weather-image" src="" alt="Weather Image">
+        <p id="rain-probability"></p>
+        <p id="temperature"></p>
+        <p id="updatetime"></p>
+      </div>
+
+
+      <!-- ロゴの下に追加するテキスト -->
+      <div class="subtitle"></div>
+
+      <!-- ロゴの下に追加する画像 
+      <img src="温泉マーク.png" alt="追加したい画像の説明" class="additional-image">
+      <!-- 画像の隣に追加する文字 
+      <div class="image-caption">温泉情報</div>
+
+      <!-- ハンバーガーメニュー部分 -->
+      <div class="nav">
+        <!-- ハンバーガーメニューの表示・非表示を切り替えるチェックボックス -->
+        <input id="drawer_input" class="drawer_hidden" type="checkbox" />
+
+        <!-- ハンバーガーアイコン -->
+        <label for="drawer_input" class="drawer_open"><span></span></label>
+
+        <!-- メニュー -->
+        <nav class="nav_content">
+          <ul class="nav_list">
+            <li class="nav_item"><b><a href="https://www.youtube.com/watch?v=Y2rLfm7DZbM"
+                  target="_blank">youtube<br>道後温泉ライブカメラ</a></b><br>道後温泉本館の様子を２４時間視聴できるyotubelive</li>
+            <li class="nav_item"><b><a href="https://www.iyotetsu.co.jp/rosen/rail/shinai_time.pdf"
+                  target="_blank">伊予鉄路面電車時刻表</a></b><br>このサイトで表示している路面電車の時刻表</li>
+            <li class="nav_item"><b><a href="https://www.iyotetsu.co.jp/rosen/map/rail_kogai/rail_kogai.pdf?"
+                  target="_blank">伊予鉄郊外電車線路図</a></b><br>郊外などへのお出かけの際に必要となる伊予鉄の運営している郊外電車の線路図</li>
+            <li class="nav_item"><b><a href="https://www.iyotetsu.co.jp/rosen/map/bus/busmap.pdf?"
+                  target="_blank">伊予鉄バス線路図</a></b><br>郊外などへのお出かけの際に必要となる伊予鉄の運営しているバスの線路図</li>
+          </ul>
+        </nav>
+      </div>
+      <!-- 地図表示用のdiv -->
+      <div id="map"></div>
+
+      <div id="ex_gps"></div>
+      <div id="messageDiv"></div>
+
+
+      <div id="data-container">
+        <script>
+          async function fetchData(url) {
+            try {
+              const response = await fetch(url);
+              const data = await response.json();
+              return data;
+            } catch (error) {
+              console.error("Error fetching data:", error);
+              return null;
+            }
+          }
+          // 各サイトからデータを取得し、天気に応じた画像とその他の情報を表示
+          const weatherContainer = document.getElementById("weather-container");
+          const weatherImage = document.getElementById("weather-image");
+          const rainProbabilityElement = document.getElementById("rain-probability");
+          const temperatureElement = document.getElementById("temperature");
+          const updatetimeElement = document.getElementById("updatetime");
+          async function displayWeatherData() {
+            const updatetimeData = await fetchData("https://fiware-sc.e-catv.ne.jp/v2/entities/jp.ehime.hackathon.today_weather.hackathon-asset010.asset-001/attrs/TimeDefine/");
+            const weatherDataResponse = await fetchData("https://fiware-sc.e-catv.ne.jp/v2/entities/jp.ehime.hackathon.today_weather.hackathon-asset010.asset-001/attrs/Weather/");
+            const rainProbability = await fetchData("https://fiware-sc.e-catv.ne.jp/v2/entities/jp.ehime.oshiraseCH.weather-inf.oshiraseCH-asset020/attrs/rain_probability/value");
+            const temperature = await fetchData("https://fiware-sc.e-catv.ne.jp/v2/entities/jp.ehime.oshiraseCH.temperature-inf.oshiraseCH-asset030/attrs/degree/value");
+            // updatetimeData がオブジェクトでない場合の処理
+            if (typeof updatetimeData === 'object' && updatetimeData !== null) {
+              const updatetime = updatetimeData.value.trim(); // 必要に応じて文字列整形
+              // weatherDataResponse がオブジェクトでない場合の処理
+              if (typeof weatherDataResponse === 'object' && weatherDataResponse !== null) {
+                const weatherData = weatherDataResponse.value.trim(); // 必要に応じて文字列整形
+                // 最初の文字を優先して判定する条件分岐
+                let imageSrc;
+                if (weatherData.includes('晴れ')) {
+                  if (weatherData.includes('くもり')) {
+                    imageSrc = 'hare_kumori.png';
+                  }
+                  else if (weatherData.includes('雪')) {
+                    imageSrc = 'hare_yuki.png';
+                  }
+                  else if (weatherData.includes('雨')) {
+                    imageSrc = 'hare_ame.png';
+                  } else {
+                    imageSrc = 'hare.png';
+                  }
+                } else if (weatherData.includes('くもり')) {
+                  if (weatherData.includes('晴れ')) {
+                    imageSrc = 'kumori_hare.png';
+                  }
+                  else if (weatherData.includes('雪')) {
+                    imageSrc = 'kumori_yuki.png';
+                  }
+                  else if (weatherData.includes('雨')) {
+                    imageSrc = 'kumori_ame.png';
+                  } else {
+                    imageSrc = 'kumori.png';
+                  }
+                } else if (weatherData.includes('雪')) {
+                  if (weatherData.includes('くもり')) {
+                    imageSrc = 'yuki_kumori.png';
+                  }
+                  else if (weatherData.includes('晴れ')) {
+                    imageSrc = 'yuki_hare.png';
+                  }
+                  else if (weatherData.includes('雨')) {
+                    imageSrc = 'yuki_ame.png';
+                  } else {
+                    imageSrc = 'yuki.png';
+                  }
+                } else if (weatherData.includes('雨')) {
+                  if (weatherData.includes('くもり')) {
+                    imageSrc = 'ame_kumori.png';
+                  }
+                  else if (weatherData.includes('雪')) {
+                    imageSrc = 'ame_yuki.png';
+                  }
+                  else if (weatherData.includes('晴れ')) {
+                    imageSrc = 'ame_hare.png';
+                  } else {
+                    imageSrc = 'ame.png';
+                  }
+                } else {
+                  imageSrc = 'default.jpg';
+                }
+                if (typeof updatetimeData === 'object' && updatetimeData !== null) {
+                  const rawDatetime = new Date(updatetimeData.value); // データからDateオブジェクトを生成
+                  const month = String(rawDatetime.getMonth() + 1).padStart(2, '0'); // 月は0から始まるため+1する
+                  const day = String(rawDatetime.getDate()).padStart(2, '0');
+                  const hours = String(rawDatetime.getHours()).padStart(2, '0');
+                  const minutes = String(rawDatetime.getMinutes()).padStart(2, '0');
+                  const formattedDatetime = `${month}/${day} ${hours}:${minutes}`;
+                  // 画像とその他の情報を表示
+                  weatherImage.src = imageSrc;
+                  weatherImage.alt = `Weather Image for ${weatherData}`;
+                  rainProbabilityElement.textContent = `降水確率: ${rainProbability || 'N/A'} %`;
+                  temperatureElement.textContent = `温度: ${temperature || 'N/A'} ℃`;
+                  updatetimeElement.textContent = `更新日時: ${formattedDatetime || 'N/A'} 現在`;
+                  console.log(formattedDatetime);
+                  // 以下、他の処理を追加
+                } else {
+                  // updatetimeData がオブジェクトでない場合の処理
+                  console.error('updatetimeData is not an object:', updatetimeData);
+                }
+              } else {
+                // weatherDataResponse がオブジェクトでない場合の処理
+                console.error('weatherDataResponse is not an object:', weatherDataResponse);
+              }
+            } else {
+              // updatetimeData がオブジェクトでない場合の処理
+              console.error('updatetimeData is not an object:', updatetimeData);
+            }
+          }
+          // 関数を呼び出してデータを表示
+          displayWeatherData();
+        </script>
+    </header>
+</body>
+
+
+
+</html>
